@@ -113,6 +113,104 @@ const processGitHubActionsBlock = (
       };
     }
 
+    case "gha_pull_request_config": {
+      const types = block.getFieldValue("TYPES");
+      const branches = block.getFieldValue("BRANCHES");
+      const paths = block.getFieldValue("PATHS");
+
+      const prConfig: Record<string, string[]> = {};
+      if (types.trim()) {
+        prConfig.types = types.split(",").map((t: string) => t.trim());
+      }
+      if (branches.trim()) {
+        prConfig.branches = branches.split(",").map((b: string) => b.trim());
+      }
+      if (paths.trim()) {
+        prConfig.paths = paths.split(",").map((p: string) => p.trim());
+      }
+
+      return {
+        type: "pull_request_config",
+        value: Object.keys(prConfig).length > 0 ? prConfig : {},
+      };
+    }
+
+    case "gha_workflow_dispatch_config": {
+      const inputName = block.getFieldValue("INPUT_NAME");
+      const description = block.getFieldValue("DESCRIPTION");
+      const inputType = block.getFieldValue("INPUT_TYPE");
+      const defaultValue = block.getFieldValue("DEFAULT");
+      const required = block.getFieldValue("REQUIRED") === "true";
+      const options = block.getFieldValue("OPTIONS");
+
+      const input: Record<string, unknown> = {
+        description: description,
+        required: required,
+        type: inputType,
+      };
+
+      if (defaultValue.trim()) {
+        input.default = defaultValue;
+      }
+
+      if (inputType === "choice" && options.trim()) {
+        input.options = options.split(",").map((o: string) => o.trim());
+      }
+
+      return {
+        type: "workflow_dispatch_config",
+        value: {
+          inputs: {
+            [inputName]: input,
+          },
+        },
+      };
+    }
+
+    case "gha_release_config": {
+      const types = block.getFieldValue("TYPES");
+      return {
+        type: "release_config",
+        value: { types: [types] },
+      };
+    }
+
+    case "gha_issues_config": {
+      const types = block.getFieldValue("TYPES");
+      const typesArray = types.split(",").map((t: string) => t.trim());
+      return {
+        type: "issues_config",
+        value: { types: typesArray },
+      };
+    }
+
+    case "gha_repository_dispatch_config": {
+      const types = block.getFieldValue("TYPES");
+      const typesArray = types.split(",").map((t: string) => t.trim());
+      return {
+        type: "repository_dispatch_config",
+        value: { types: typesArray },
+      };
+    }
+
+    case "gha_workflow_call_config": {
+      const inputName = block.getFieldValue("INPUT_NAME");
+      const inputType = block.getFieldValue("INPUT_TYPE");
+      const required = block.getFieldValue("REQUIRED") === "true";
+
+      return {
+        type: "workflow_call_config",
+        value: {
+          inputs: {
+            [inputName]: {
+              type: inputType,
+              required: required,
+            },
+          },
+        },
+      };
+    }
+
     case "gha_job": {
       const jobName = block.getFieldValue("JOB_NAME");
       const runsOn = block.getFieldValue("RUNS_ON");

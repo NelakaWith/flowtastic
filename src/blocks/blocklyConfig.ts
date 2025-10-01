@@ -67,6 +67,30 @@ export const toolboxConfig = {
         },
         {
           kind: "block",
+          type: "gha_pull_request_config",
+        },
+        {
+          kind: "block",
+          type: "gha_workflow_dispatch_config",
+        },
+        {
+          kind: "block",
+          type: "gha_release_config",
+        },
+        {
+          kind: "block",
+          type: "gha_issues_config",
+        },
+        {
+          kind: "block",
+          type: "gha_repository_dispatch_config",
+        },
+        {
+          kind: "block",
+          type: "gha_workflow_call_config",
+        },
+        {
+          kind: "block",
           type: "gha_schedule_config",
         },
         {

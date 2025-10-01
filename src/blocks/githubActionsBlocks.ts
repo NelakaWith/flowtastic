@@ -64,10 +64,15 @@ Blockly.Blocks["gha_trigger"] = {
         new Blockly.FieldDropdown([
           ["Push", "push"],
           ["Pull Request", "pull_request"],
+          ["Pull Request Target", "pull_request_target"],
           ["Schedule", "schedule"],
           ["Manual", "workflow_dispatch"],
           ["Release", "release"],
           ["Issues", "issues"],
+          ["Repository Dispatch", "repository_dispatch"],
+          ["Workflow Call", "workflow_call"],
+          ["Watch", "watch"],
+          ["Fork", "fork"],
         ]),
         "TRIGGER_TYPE"
       );
@@ -105,6 +110,165 @@ Blockly.Blocks["gha_schedule_config"] = {
     this.setOutput(true, null);
     this.setColour(120);
     this.setTooltip("Configure schedule trigger with cron expression");
+    this.setHelpUrl("");
+  },
+};
+
+// Pull Request Config Block
+Blockly.Blocks["gha_pull_request_config"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Pull Request Config");
+    this.appendDummyInput()
+      .appendField("Types:")
+      .appendField(
+        new Blockly.FieldTextInput("opened,synchronize,closed"),
+        "TYPES"
+      );
+    this.appendDummyInput()
+      .appendField("Branches:")
+      .appendField(new Blockly.FieldTextInput("main"), "BRANCHES");
+    this.appendDummyInput()
+      .appendField("Paths:")
+      .appendField(new Blockly.FieldTextInput(""), "PATHS");
+    this.setOutput(true, null);
+    this.setColour(120);
+    this.setTooltip("Configure pull request trigger (comma-separated values)");
+    this.setHelpUrl("");
+  },
+};
+
+// Workflow Dispatch Config Block
+Blockly.Blocks["gha_workflow_dispatch_config"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Manual Trigger Config");
+    this.appendDummyInput()
+      .appendField("Input Name:")
+      .appendField(new Blockly.FieldTextInput("environment"), "INPUT_NAME");
+    this.appendDummyInput()
+      .appendField("Description:")
+      .appendField(
+        new Blockly.FieldTextInput("Environment to deploy"),
+        "DESCRIPTION"
+      );
+    this.appendDummyInput()
+      .appendField("Type:")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["string", "string"],
+          ["choice", "choice"],
+          ["boolean", "boolean"],
+          ["environment", "environment"],
+        ]),
+        "INPUT_TYPE"
+      );
+    this.appendDummyInput()
+      .appendField("Default:")
+      .appendField(new Blockly.FieldTextInput("staging"), "DEFAULT");
+    this.appendDummyInput()
+      .appendField("Required:")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["true", "true"],
+          ["false", "false"],
+        ]),
+        "REQUIRED"
+      );
+    this.appendDummyInput()
+      .appendField("Options:")
+      .appendField(new Blockly.FieldTextInput("staging,production"), "OPTIONS");
+    this.setOutput(true, null);
+    this.setColour(120);
+    this.setTooltip("Configure manual workflow trigger with inputs");
+    this.setHelpUrl("");
+  },
+};
+
+// Release Config Block
+Blockly.Blocks["gha_release_config"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Release Config");
+    this.appendDummyInput()
+      .appendField("Types:")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["published", "published"],
+          ["created", "created"],
+          ["released", "released"],
+          ["prereleased", "prereleased"],
+          ["edited", "edited"],
+          ["deleted", "deleted"],
+        ]),
+        "TYPES"
+      );
+    this.setOutput(true, null);
+    this.setColour(120);
+    this.setTooltip("Configure release trigger types");
+    this.setHelpUrl("");
+  },
+};
+
+// Issues Config Block
+Blockly.Blocks["gha_issues_config"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Issues Config");
+    this.appendDummyInput()
+      .appendField("Types:")
+      .appendField(
+        new Blockly.FieldTextInput("opened,closed,labeled"),
+        "TYPES"
+      );
+    this.setOutput(true, null);
+    this.setColour(120);
+    this.setTooltip("Configure issues trigger types (comma-separated)");
+    this.setHelpUrl("");
+  },
+};
+
+// Repository Dispatch Config Block
+Blockly.Blocks["gha_repository_dispatch_config"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Repository Dispatch Config");
+    this.appendDummyInput()
+      .appendField("Types:")
+      .appendField(new Blockly.FieldTextInput("deploy,test"), "TYPES");
+    this.setOutput(true, null);
+    this.setColour(120);
+    this.setTooltip(
+      "Configure repository dispatch event types (comma-separated)"
+    );
+    this.setHelpUrl("");
+  },
+};
+
+// Workflow Call Config Block
+Blockly.Blocks["gha_workflow_call_config"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Workflow Call Config");
+    this.appendDummyInput()
+      .appendField("Input Name:")
+      .appendField(new Blockly.FieldTextInput("config"), "INPUT_NAME");
+    this.appendDummyInput()
+      .appendField("Type:")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["string", "string"],
+          ["number", "number"],
+          ["boolean", "boolean"],
+        ]),
+        "INPUT_TYPE"
+      );
+    this.appendDummyInput()
+      .appendField("Required:")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["true", "true"],
+          ["false", "false"],
+        ]),
+        "REQUIRED"
+      );
+    this.setOutput(true, null);
+    this.setColour(120);
+    this.setTooltip("Configure reusable workflow inputs");
     this.setHelpUrl("");
   },
 };
