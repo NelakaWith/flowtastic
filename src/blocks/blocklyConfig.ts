@@ -115,6 +115,10 @@ export const toolboxConfig = {
         },
         {
           kind: "block",
+          type: "gha_step_run_enhanced",
+        },
+        {
+          kind: "block",
           type: "gha_with_params",
         },
         {

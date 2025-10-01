@@ -18,6 +18,7 @@ export interface GitHubActionsWorkflowDirect {
         uses?: string;
         run?: string;
         shell?: string;
+        "working-directory"?: string;
         with?: Record<string, unknown>;
         env?: Record<string, string>;
         if?: string;
@@ -312,9 +313,36 @@ const processGitHubActionsBlock = (
         multiStep.shell = shell;
       }
 
+      const workingDirectory = block.getFieldValue("WORKING_DIRECTORY");
+      if (workingDirectory && workingDirectory.trim()) {
+        multiStep["working-directory"] = workingDirectory.trim();
+      }
+
       return {
         type: "step",
         value: multiStep,
+      };
+    }
+
+    case "gha_step_run_enhanced": {
+      const enhancedStep: Record<string, string> = {
+        name: block.getFieldValue("STEP_NAME"),
+        run: block.getFieldValue("COMMANDS"),
+      };
+
+      const workingDirectory = block.getFieldValue("WORKING_DIRECTORY");
+      if (workingDirectory && workingDirectory.trim()) {
+        enhancedStep["working-directory"] = workingDirectory.trim();
+      }
+
+      const shell = block.getFieldValue("SHELL");
+      if (shell !== "bash") {
+        enhancedStep.shell = shell;
+      }
+
+      return {
+        type: "step",
+        value: enhancedStep,
       };
     }
 

@@ -386,6 +386,9 @@ Blockly.Blocks["gha_step_run_multiline"] = {
         ]),
         "SHELL"
       );
+    this.appendDummyInput()
+      .appendField("Working Directory:")
+      .appendField(new Blockly.FieldTextInput(""), "WORKING_DIRECTORY");
     this.appendDummyInput().appendField("Script:");
     this.appendDummyInput().appendField(
       new Blockly.FieldTextInput(
@@ -396,7 +399,43 @@ Blockly.Blocks["gha_step_run_multiline"] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(290);
-    this.setTooltip("Run a multi-line script");
+    this.setTooltip("Run a multi-line script with optional working directory");
+    this.setHelpUrl("");
+  },
+};
+
+// Step - Enhanced Run (with working directory)
+Blockly.Blocks["gha_step_run_enhanced"] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("Enhanced Step:")
+      .appendField(new Blockly.FieldTextInput("Build"), "STEP_NAME");
+    this.appendDummyInput()
+      .appendField("Working Directory:")
+      .appendField(new Blockly.FieldTextInput(""), "WORKING_DIRECTORY");
+    this.appendDummyInput()
+      .appendField("Shell:")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["bash", "bash"],
+          ["sh", "sh"],
+          ["cmd", "cmd"],
+          ["powershell", "powershell"],
+          ["python", "python"],
+        ]),
+        "SHELL"
+      );
+    this.appendDummyInput().appendField("Commands:");
+    this.appendDummyInput().appendField(
+      new Blockly.FieldTextInput("npm ci --ignore-scripts\nnpm run build"),
+      "COMMANDS"
+    );
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(290);
+    this.setTooltip(
+      "Enhanced step with working directory and multi-line commands"
+    );
     this.setHelpUrl("");
   },
 };
