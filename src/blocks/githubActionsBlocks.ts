@@ -292,11 +292,14 @@ Blockly.Blocks["gha_job"] = {
         ]),
         "RUNS_ON"
       );
+    this.appendValueInput("PERMISSIONS")
+      .setCheck(null)
+      .appendField("Permissions");
     this.appendStatementInput("STEPS").setCheck(null).appendField("Steps");
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
-    this.setTooltip("Define a job with its runner and steps");
+    this.setTooltip("Define a job with its runner, permissions, and steps");
     this.setHelpUrl("");
   },
 };
@@ -325,8 +328,7 @@ Blockly.Blocks["gha_job_permissions"] = {
         ]),
         "DEPLOYMENTS"
       );
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
+    this.setOutput(true, null); // Changed to output block
     this.setColour(210);
     this.setTooltip("Set job-level permissions");
     this.setHelpUrl("");

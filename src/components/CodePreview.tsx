@@ -23,10 +23,21 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
     try {
       if (format === "github-actions") {
         const githubWorkflow = workflowToGitHubActions(workflow);
-        return yaml.dump(githubWorkflow, { indent: 2, lineWidth: -1 });
+        return yaml.dump(githubWorkflow, {
+          indent: 2,
+          lineWidth: -1,
+          styles: {
+            "!!str": "literal",
+          },
+        });
       } else if (format === "github-blocks") {
         const githubWorkflow = githubActionsBlocksToWorkflow(workspace);
-        return yaml.dump(githubWorkflow, { indent: 2, lineWidth: -1 });
+
+        return yaml.dump(githubWorkflow, {
+          indent: 2,
+          lineWidth: -1,
+          flowLevel: -1,
+        });
       } else if (format === "yaml") {
         return yaml.dump(workflow, { indent: 2 });
       } else {

@@ -216,16 +216,20 @@ const processGitHubActionsBlock = (
       const jobName = block.getFieldValue("JOB_NAME");
       const runsOn = block.getFieldValue("RUNS_ON");
 
-      const job: {
-        "runs-on": string;
-        steps: Array<Record<string, unknown>>;
-        permissions?: Record<string, string>;
-        strategy?: { matrix: Record<string, string[]> };
-        env?: Record<string, string>;
-      } = {
-        "runs-on": runsOn,
-        steps: [],
-      };
+      // Collect all job properties first
+      let permissions: Record<string, string> | undefined;
+      let strategy: { matrix: Record<string, string[]> } | undefined;
+      let env: Record<string, string> | undefined;
+      const steps: Array<Record<string, unknown>> = [];
+
+      // Process permissions input
+      const permissionsBlock = block.getInputTargetBlock("PERMISSIONS");
+      if (permissionsBlock) {
+        const permissionsResult = processGitHubActionsBlock(permissionsBlock);
+        if (permissionsResult && permissionsResult.type === "job_permissions") {
+          permissions = permissionsResult.value as Record<string, string>;
+        }
+      }
 
       // Process steps
       const stepsInput = block.getInput("STEPS");
@@ -234,19 +238,36 @@ const processGitHubActionsBlock = (
         while (stepBlock) {
           const step = processGitHubActionsBlock(stepBlock);
           if (step) {
-            if (step.type === "job_permissions") {
-              job.permissions = step.value as Record<string, string>;
-            } else if (step.type === "strategy_matrix") {
-              job.strategy = step.value as { matrix: Record<string, string[]> };
+            if (step.type === "strategy_matrix") {
+              strategy = step.value as { matrix: Record<string, string[]> };
             } else if (step.type === "env_vars") {
-              job.env = step.value as Record<string, string>;
+              env = step.value as Record<string, string>;
             } else if (step.type === "step") {
-              job.steps.push(step.value as Record<string, unknown>);
+              steps.push(step.value as Record<string, unknown>);
             }
           }
           stepBlock = stepBlock.getNextBlock();
         }
       }
+
+      // Build job object in correct order
+      const job: Record<string, unknown> = {
+        "runs-on": runsOn,
+      };
+
+      // Add optional properties in correct order
+      if (permissions) {
+        job.permissions = permissions;
+      }
+      if (strategy) {
+        job.strategy = strategy;
+      }
+      if (env) {
+        job.env = env;
+      }
+
+      // Always add steps last
+      job.steps = steps;
 
       return {
         type: "job",
