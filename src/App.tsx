@@ -56,6 +56,15 @@ function App() {
     }
   }, []);
 
+  // Force app-wide dark mode (no toggle)
+  useEffect(() => {
+    try {
+      document.documentElement.classList.add("dark");
+    } catch (e) {
+      console.debug("Could not set dark class", e);
+    }
+  }, []);
+
   // Auto-save on unmount
   useEffect(() => {
     const workspace = workspaceRef.current;
@@ -78,8 +87,10 @@ function App() {
               Workflow Builder MVP
             </span>
           </div>
-          <div className="text-sm text-gray-200">
-            Build workflows visually • Export to YAML/JSON
+          <div className="flex items-center gap-3">
+            <div className="text-sm text-gray-200">
+              Build workflows visually • Export to YAML/JSON
+            </div>
           </div>
         </div>
       </header>

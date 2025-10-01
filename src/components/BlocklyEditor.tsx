@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import * as Blockly from "blockly";
 import { blocklyOptions } from "../blocks/blocklyConfig";
 import "../blocks/customBlocks";
+import { flowtasticDark } from "../blocks/blocklyTheme";
 
 interface BlocklyEditorProps {
   onWorkspaceChange: (workspace: Blockly.WorkspaceSvg) => void;
@@ -16,7 +17,11 @@ export const BlocklyEditor: React.FC<BlocklyEditorProps> = ({
 
   useEffect(() => {
     if (blocklyDiv.current && !workspaceRef.current) {
-      workspaceRef.current = Blockly.inject(blocklyDiv.current, blocklyOptions);
+      // Apply the dark theme during injection
+      workspaceRef.current = Blockly.inject(blocklyDiv.current, {
+        ...blocklyOptions,
+        theme: flowtasticDark,
+      });
 
       // Listen to workspace changes
       workspaceRef.current.addChangeListener(() => {

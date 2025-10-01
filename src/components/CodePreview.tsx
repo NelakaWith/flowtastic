@@ -1,6 +1,7 @@
 import { useState } from "react";
 import yaml from "js-yaml";
 import type { Workflow } from "../utils/blockToWorkflow";
+import { Button } from "./Button";
 
 interface CodePreviewProps {
   workflow: Workflow;
@@ -46,41 +47,29 @@ export const CodePreview: React.FC<CodePreviewProps> = ({ workflow }) => {
         <h2 className="text-lg font-semibold">Workflow Preview</h2>
         <div className="flex gap-2">
           <div className="flex bg-gray-800 rounded-lg overflow-hidden">
-            <button
+            <Button
               onClick={() => setFormat("yaml")}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
-                format === "yaml"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-400 hover:text-gray-200"
-              }`}
+              variant={format === "yaml" ? "primary" : "ghost"}
             >
               YAML
-            </button>
-            <button
+            </Button>
+            <Button
               onClick={() => setFormat("json")}
-              className={`px-4 py-2 text-sm font-medium transition-colors ${
-                format === "json"
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-400 hover:text-gray-200"
-              }`}
+              variant={format === "json" ? "primary" : "ghost"}
             >
               JSON
-            </button>
+            </Button>
           </div>
-          <button
+          <Button
             onClick={copyToClipboard}
-            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
+            variant="ghost"
             title="Copy to clipboard"
           >
             📋 Copy
-          </button>
-          <button
-            onClick={downloadFile}
-            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors"
-            title="Download file"
-          >
+          </Button>
+          <Button onClick={downloadFile} variant="ghost" title="Download file">
             💾 Download
-          </button>
+          </Button>
         </div>
       </div>
       <div className="flex-1 overflow-auto">
