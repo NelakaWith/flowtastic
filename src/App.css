@@ -5,6 +5,81 @@
   background-color: #1e1e1e !important;
 }
 
+/* Fix Blockly toolbox scrollbar issue - hide the intrusive middle scrollbar */
+.blocklyFlyout .blocklyScrollbarVertical {
+  display: none !important;
+}
+
+/* Alternative: if you want to keep scrollbar but style it better */
+.blocklyScrollbarVertical {
+  width: 8px !important;
+  right: 2px !important;
+  background: rgba(75, 85, 99, 0.3) !important;
+  border-radius: 4px !important;
+}
+
+.blocklyScrollbarHorizontal {
+  height: 8px !important;
+  bottom: 2px !important;
+  background: rgba(75, 85, 99, 0.3) !important;
+  border-radius: 4px !important;
+}
+
+/* Style the scrollbar handle */
+.blocklyScrollbarHandle {
+  background-color: #6b7280 !important;
+  border-radius: 4px !important;
+  border: none !important;
+}
+
+.blocklyScrollbarHandle:hover {
+  background-color: #9ca3af !important;
+}
+
+/* Ensure flyout scrolls properly without showing scrollbar in middle */
+.blocklyFlyout {
+  overflow: hidden !important;
+}
+
+/* Hide any scrollbars that might appear in the toolbox content area */
+.blocklyToolboxContents,
+.blocklyFlyoutBackground {
+  overflow: hidden !important;
+}
+
+/* Fix Blockly toolbox scrollbar issue */
+.blocklyFlyout {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+.blocklyFlyoutScrollbar {
+  width: 8px !important;
+  background-color: transparent !important;
+}
+
+.blocklyScrollbarHandle {
+  background-color: #4b5563 !important;
+  border-radius: 4px !important;
+  width: 6px !important;
+}
+
+.blocklyScrollbarHandle:hover {
+  background-color: #6b7280 !important;
+}
+
+/* Hide the middle scrollbar track that appears in flyout */
+.blocklyFlyout .blocklyScrollbarVertical {
+  right: 2px !important;
+  width: 8px !important;
+  background: transparent !important;
+}
+
+/* Ensure toolbox content doesn't overflow awkwardly */
+.blocklyToolboxContents {
+  overflow: hidden !important;
+}
+
 /* Custom scrollbar for code preview */
 pre::-webkit-scrollbar {
   width: 8px;

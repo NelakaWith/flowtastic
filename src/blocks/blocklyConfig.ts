@@ -46,6 +46,69 @@ export const toolboxConfig = {
     },
     {
       kind: "category",
+      name: "GitHub Actions",
+      colour: "160",
+      contents: [
+        {
+          kind: "block",
+          type: "gha_workflow_name",
+        },
+        {
+          kind: "block",
+          type: "gha_permissions",
+        },
+        {
+          kind: "block",
+          type: "gha_trigger",
+        },
+        {
+          kind: "block",
+          type: "gha_push_config",
+        },
+        {
+          kind: "block",
+          type: "gha_schedule_config",
+        },
+        {
+          kind: "block",
+          type: "gha_job",
+        },
+        {
+          kind: "block",
+          type: "gha_job_permissions",
+        },
+        {
+          kind: "block",
+          type: "gha_step_uses",
+        },
+        {
+          kind: "block",
+          type: "gha_step_run",
+        },
+        {
+          kind: "block",
+          type: "gha_step_run_multiline",
+        },
+        {
+          kind: "block",
+          type: "gha_with_params",
+        },
+        {
+          kind: "block",
+          type: "gha_env_vars",
+        },
+        {
+          kind: "block",
+          type: "gha_step_condition",
+        },
+        {
+          kind: "block",
+          type: "gha_strategy_matrix",
+        },
+      ],
+    },
+    {
+      kind: "category",
       name: "Data & Variables",
       colour: "330",
       contents: [

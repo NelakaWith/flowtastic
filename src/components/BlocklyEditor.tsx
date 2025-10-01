@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import * as Blockly from "blockly";
 import { blocklyOptions } from "../blocks/blocklyConfig";
 import "../blocks/customBlocks";
+import "../blocks/githubActionsBlocks";
 import { flowtasticDark } from "../blocks/blocklyTheme";
 
 interface BlocklyEditorProps {

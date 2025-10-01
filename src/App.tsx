@@ -115,7 +115,7 @@ function App() {
 
         {/* Code Preview */}
         <div className="w-1/2 flex flex-col">
-          <CodePreview workflow={workflow} />
+          <CodePreview workflow={workflow} workspace={workspaceRef.current!} />
         </div>
       </div>
 

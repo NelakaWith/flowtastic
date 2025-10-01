@@ -1,26 +1,49 @@
 import { useState } from "react";
 import yaml from "js-yaml";
+import * as Blockly from "blockly";
 import type { Workflow } from "../utils/blockToWorkflow";
+import { workflowToGitHubActions } from "../utils/githubActionsConverter";
+import { githubActionsBlocksToWorkflow } from "../utils/githubActionsBlocksConverter";
 import { Button } from "./Button";
 
 interface CodePreviewProps {
   workflow: Workflow;
+  workspace: Blockly.WorkspaceSvg;
 }
 
-type PreviewFormat = "yaml" | "json";
+type PreviewFormat = "yaml" | "json" | "github-actions" | "github-blocks";
 
-export const CodePreview: React.FC<CodePreviewProps> = ({ workflow }) => {
+export const CodePreview: React.FC<CodePreviewProps> = ({
+  workflow,
+  workspace,
+}) => {
   const [format, setFormat] = useState<PreviewFormat>("yaml");
 
   const getPreviewContent = (): string => {
     try {
-      if (format === "yaml") {
+      if (format === "github-actions") {
+        const githubWorkflow = workflowToGitHubActions(workflow);
+        return yaml.dump(githubWorkflow, { indent: 2, lineWidth: -1 });
+      } else if (format === "github-blocks") {
+        const githubWorkflow = githubActionsBlocksToWorkflow(workspace);
+        return yaml.dump(githubWorkflow, { indent: 2, lineWidth: -1 });
+      } else if (format === "yaml") {
         return yaml.dump(workflow, { indent: 2 });
       } else {
         return JSON.stringify(workflow, null, 2);
       }
     } catch (error) {
       return `Error generating ${format.toUpperCase()}: ${error}`;
+    }
+  };
+
+  const getFileName = (): string => {
+    if (format === "github-actions" || format === "github-blocks") {
+      return "workflow.yml";
+    } else if (format === "yaml") {
+      return "workflow.yaml";
+    } else {
+      return "workflow.json";
     }
   };
 
@@ -34,7 +57,7 @@ export const CodePreview: React.FC<CodePreviewProps> = ({ workflow }) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `workflow.${format}`;
+    a.download = getFileName();
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -59,6 +82,18 @@ export const CodePreview: React.FC<CodePreviewProps> = ({ workflow }) => {
             >
               JSON
             </Button>
+            <Button
+              onClick={() => setFormat("github-actions")}
+              variant={format === "github-actions" ? "primary" : "ghost"}
+            >
+              GitHub (Converted)
+            </Button>
+            <Button
+              onClick={() => setFormat("github-blocks")}
+              variant={format === "github-blocks" ? "primary" : "ghost"}
+            >
+              GitHub (Native)
+            </Button>
           </div>
           <Button
             onClick={copyToClipboard}
@@ -77,6 +112,40 @@ export const CodePreview: React.FC<CodePreviewProps> = ({ workflow }) => {
           <code>{getPreviewContent()}</code>
         </pre>
       </div>
+      {(format === "github-actions" || format === "github-blocks") && (
+        <div className="p-4 border-t border-gray-700 bg-gray-800">
+          <div className="text-sm text-gray-300">
+            <p className="font-semibold mb-2">💡 GitHub Actions Workflow</p>
+            {format === "github-actions" && (
+              <p className="mb-2">
+                <span className="bg-blue-900 text-blue-200 px-2 py-1 rounded text-xs">
+                  CONVERTED
+                </span>{" "}
+                Generated from generic workflow blocks
+              </p>
+            )}
+            {format === "github-blocks" && (
+              <p className="mb-2">
+                <span className="bg-green-900 text-green-200 px-2 py-1 rounded text-xs">
+                  NATIVE
+                </span>{" "}
+                Built with GitHub Actions blocks
+              </p>
+            )}
+            <p>
+              Save this as{" "}
+              <code className="bg-gray-700 px-1 rounded">
+                .github/workflows/{getFileName()}
+              </code>{" "}
+              in your repository.
+            </p>
+            <p className="mt-1">
+              Configure required secrets in your repository settings for actions
+              that need them.
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
