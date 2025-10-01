@@ -120,6 +120,202 @@ Blockly.Blocks["workflow_simple_condition"] = {
   },
 };
 
+// Loop Block
+Blockly.Blocks["workflow_loop"] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("Loop")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["For Each", "foreach"],
+          ["While", "while"],
+          ["For Count", "for"],
+          ["Repeat", "repeat"],
+        ]),
+        "LOOP_TYPE"
+      );
+    this.appendValueInput("CONDITION")
+      .setCheck(null)
+      .appendField("Condition/Items");
+    this.appendStatementInput("DO").setCheck(null).appendField("Do");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(160);
+    this.setTooltip("Loop through items or repeat actions");
+    this.setHelpUrl("");
+  },
+};
+
+// Variable Block
+Blockly.Blocks["workflow_variable"] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["Set", "set"],
+          ["Get", "get"],
+          ["Increment", "increment"],
+          ["Decrement", "decrement"],
+        ]),
+        "OPERATION"
+      )
+      .appendField("variable")
+      .appendField(new Blockly.FieldTextInput("variableName"), "VAR_NAME");
+    this.appendValueInput("VALUE").setCheck(null).appendField("Value");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setOutput(true, null);
+    this.setColour(330);
+    this.setTooltip("Manage workflow variables");
+    this.setHelpUrl("");
+  },
+};
+
+// Advanced HTTP Block
+Blockly.Blocks["workflow_http_request"] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("HTTP Request:")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["GET", "GET"],
+          ["POST", "POST"],
+          ["PUT", "PUT"],
+          ["DELETE", "DELETE"],
+          ["PATCH", "PATCH"],
+        ]),
+        "METHOD"
+      );
+    this.appendDummyInput()
+      .appendField("URL")
+      .appendField(
+        new Blockly.FieldTextInput("https://api.example.com"),
+        "URL"
+      );
+    this.appendValueInput("HEADERS").setCheck(null).appendField("Headers");
+    this.appendValueInput("BODY").setCheck(null).appendField("Body");
+    this.appendDummyInput()
+      .appendField("Timeout (ms)")
+      .appendField(new Blockly.FieldNumber(5000, 1000, 60000), "TIMEOUT");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(260);
+    this.setTooltip("Advanced HTTP request with headers and body");
+    this.setHelpUrl("");
+  },
+};
+
+// Try/Catch Block
+Blockly.Blocks["workflow_try_catch"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Try");
+    this.appendStatementInput("TRY").setCheck(null).appendField("Execute");
+    this.appendStatementInput("CATCH").setCheck(null).appendField("On Error");
+    this.appendStatementInput("FINALLY").setCheck(null).appendField("Finally");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(0);
+    this.setTooltip("Error handling with try/catch/finally");
+    this.setHelpUrl("");
+  },
+};
+
+// Delay/Wait Block
+Blockly.Blocks["workflow_delay"] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("Wait")
+      .appendField(new Blockly.FieldNumber(1, 0, 3600), "DURATION")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["seconds", "seconds"],
+          ["minutes", "minutes"],
+          ["hours", "hours"],
+          ["milliseconds", "ms"],
+        ]),
+        "UNIT"
+      );
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(65);
+    this.setTooltip("Wait for specified duration");
+    this.setHelpUrl("");
+  },
+};
+
+// Parallel Block
+Blockly.Blocks["workflow_parallel"] = {
+  init: function () {
+    this.appendDummyInput().appendField("Run in Parallel");
+    this.appendStatementInput("BRANCH1").setCheck(null).appendField("Branch 1");
+    this.appendStatementInput("BRANCH2").setCheck(null).appendField("Branch 2");
+    this.appendStatementInput("BRANCH3").setCheck(null).appendField("Branch 3");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(120);
+    this.setTooltip("Execute multiple branches concurrently");
+    this.setHelpUrl("");
+  },
+};
+
+// Transform Data Block
+Blockly.Blocks["workflow_transform"] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("Transform")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["JSON Parse", "json_parse"],
+          ["JSON Stringify", "json_stringify"],
+          ["Array Map", "array_map"],
+          ["Array Filter", "array_filter"],
+          ["Array Reduce", "array_reduce"],
+          ["String Format", "string_format"],
+        ]),
+        "TRANSFORM_TYPE"
+      );
+    this.appendValueInput("INPUT").setCheck(null).appendField("Input");
+    this.appendValueInput("EXPRESSION")
+      .setCheck(null)
+      .appendField("Expression");
+    this.setOutput(true, null);
+    this.setColour(290);
+    this.setTooltip("Transform data using various operations");
+    this.setHelpUrl("");
+  },
+};
+
+// Notification Block
+Blockly.Blocks["workflow_notification"] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("Send")
+      .appendField(
+        new Blockly.FieldDropdown([
+          ["Email", "email"],
+          ["SMS", "sms"],
+          ["Push Notification", "push"],
+          ["Slack Message", "slack"],
+          ["Discord Message", "discord"],
+          ["Teams Message", "teams"],
+        ]),
+        "NOTIFICATION_TYPE"
+      );
+    this.appendDummyInput()
+      .appendField("To")
+      .appendField(new Blockly.FieldTextInput("recipient"), "RECIPIENT");
+    this.appendDummyInput()
+      .appendField("Subject")
+      .appendField(new Blockly.FieldTextInput("Subject"), "SUBJECT");
+    this.appendValueInput("MESSAGE").setCheck(null).appendField("Message");
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(45);
+    this.setTooltip("Send notifications via various channels");
+    this.setHelpUrl("");
+  },
+};
+
 export const initializeCustomBlocks = () => {
   // Blocks are registered when this module is imported
   console.log("Custom workflow blocks initialized");
