@@ -14,60 +14,60 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
     category: "CI/CD",
     blocks: `<xml xmlns="https://developers.google.com/blockly/xml">
   <block type="gha_workflow_name" x="10" y="10">
-    <field name="WORKFLOW_NAME">Node.js CI</field>
-    <statement name="TRIGGERS">
+    <field name="NAME">Node.js CI</field>
+    <next>
       <block type="gha_trigger">
         <field name="TRIGGER_TYPE">push</field>
         <next>
           <block type="gha_trigger">
             <field name="TRIGGER_TYPE">pull_request</field>
-          </block>
-        </next>
-      </block>
-    </statement>
-    <statement name="JOBS">
-      <block type="gha_job">
-        <field name="JOB_NAME">build</field>
-        <field name="RUNS_ON">ubuntu-latest</field>
-        <field name="NEEDS"></field>
-        <statement name="STEPS">
-          <block type="gha_step_uses">
-            <field name="STEP_NAME">Checkout code</field>
-            <field name="USES">actions/checkout@v4</field>
             <next>
-              <block type="gha_step_uses">
-                <field name="STEP_NAME">Setup Node.js</field>
-                <field name="USES">actions/setup-node@v4</field>
-                <statement name="WITH">
-                  <block type="gha_with_params">
-                    <field name="KEY">node-version</field>
-                    <field name="VALUE">20</field>
-                  </block>
-                </statement>
-                <next>
-                  <block type="gha_step_run">
-                    <field name="STEP_NAME">Install dependencies</field>
-                    <field name="RUN">npm ci</field>
+              <block type="gha_job">
+                <field name="JOB_NAME">build</field>
+                <field name="RUNS_ON">ubuntu-latest</field>
+                <field name="NEEDS"></field>
+                <statement name="STEPS">
+                  <block type="gha_step_uses">
+                    <field name="STEP_NAME">Checkout code</field>
+                    <field name="USES">actions/checkout@v4</field>
                     <next>
-                      <block type="gha_step_run">
-                        <field name="STEP_NAME">Run tests</field>
-                        <field name="RUN">npm test</field>
+                      <block type="gha_step_uses">
+                        <field name="STEP_NAME">Setup Node.js</field>
+                        <field name="USES">actions/setup-node@v4</field>
+                        <value name="WITH">
+                          <block type="gha_with_params">
+                            <field name="KEY">node-version</field>
+                            <field name="VALUE">20</field>
+                          </block>
+                        </value>
                         <next>
                           <block type="gha_step_run">
-                            <field name="STEP_NAME">Build</field>
-                            <field name="RUN">npm run build</field>
+                            <field name="STEP_NAME">Install dependencies</field>
+                            <field name="RUN">npm ci</field>
+                            <next>
+                              <block type="gha_step_run">
+                                <field name="STEP_NAME">Run tests</field>
+                                <field name="RUN">npm test</field>
+                                <next>
+                                  <block type="gha_step_run">
+                                    <field name="STEP_NAME">Build project</field>
+                                    <field name="RUN">npm run build</field>
+                                  </block>
+                                </next>
+                              </block>
+                            </next>
                           </block>
                         </next>
                       </block>
                     </next>
                   </block>
-                </next>
+                </statement>
               </block>
             </next>
           </block>
-        </statement>
+        </next>
       </block>
-    </statement>
+    </next>
   </block>
 </xml>`,
   },
@@ -78,67 +78,31 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
     category: "CI/CD",
     blocks: `<xml xmlns="https://developers.google.com/blockly/xml">
   <block type="gha_workflow_name" x="10" y="10">
-    <field name="WORKFLOW_NAME">Docker Build and Push</field>
-    <statement name="TRIGGERS">
+    <field name="NAME">Docker Build and Push</field>
+    <next>
       <block type="gha_trigger">
         <field name="TRIGGER_TYPE">push</field>
-        <statement name="CONFIG">
-          <block type="push_pull_request_config">
-            <field name="BRANCHES">main</field>
-            <field name="TAGS">v*</field>
-          </block>
-        </statement>
-      </block>
-    </statement>
-    <statement name="JOBS">
-      <block type="gha_job">
-        <field name="JOB_NAME">build</field>
-        <field name="RUNS_ON">ubuntu-latest</field>
-        <field name="NEEDS"></field>
-        <statement name="STEPS">
-          <block type="gha_step_uses">
-            <field name="STEP_NAME">Checkout</field>
-            <field name="USES">actions/checkout@v4</field>
-            <next>
+        <next>
+          <block type="gha_job">
+            <field name="JOB_NAME">build</field>
+            <field name="RUNS_ON">ubuntu-latest</field>
+            <field name="NEEDS"></field>
+            <statement name="STEPS">
               <block type="gha_step_uses">
-                <field name="STEP_NAME">Login to Docker Hub</field>
-                <field name="USES">docker/login-action@v3</field>
-                <statement name="WITH">
-                  <block type="gha_with_params">
-                    <field name="KEY">username</field>
-                    <field name="VALUE">\${{ secrets.DOCKER_USERNAME }}</field>
-                    <next>
-                      <block type="gha_with_params">
-                        <field name="KEY">password</field>
-                        <field name="VALUE">\${{ secrets.DOCKER_PASSWORD }}</field>
-                      </block>
-                    </next>
-                  </block>
-                </statement>
+                <field name="STEP_NAME">Checkout</field>
+                <field name="USES">actions/checkout@v4</field>
                 <next>
-                  <block type="gha_step_uses">
-                    <field name="STEP_NAME">Build and push</field>
-                    <field name="USES">docker/build-push-action@v5</field>
-                    <statement name="WITH">
-                      <block type="gha_with_params">
-                        <field name="KEY">push</field>
-                        <field name="VALUE">true</field>
-                        <next>
-                          <block type="gha_with_params">
-                            <field name="KEY">tags</field>
-                            <field name="VALUE">user/app:latest</field>
-                          </block>
-                        </next>
-                      </block>
-                    </statement>
+                  <block type="gha_step_run">
+                    <field name="STEP_NAME">Build Docker</field>
+                    <field name="RUN">docker build -t myapp .</field>
                   </block>
                 </next>
               </block>
-            </next>
+            </statement>
           </block>
-        </statement>
+        </next>
       </block>
-    </statement>
+    </next>
   </block>
 </xml>`,
   },
@@ -149,28 +113,24 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
     category: "Testing",
     blocks: `<xml xmlns="https://developers.google.com/blockly/xml">
   <block type="gha_workflow_name" x="10" y="10">
-    <field name="WORKFLOW_NAME">Python Tests</field>
-    <statement name="TRIGGERS">
+    <field name="NAME">Python Tests</field>
+    <next>
       <block type="gha_trigger">
         <field name="TRIGGER_TYPE">push</field>
         <next>
           <block type="gha_trigger">
             <field name="TRIGGER_TYPE">pull_request</field>
-          </block>
-        </next>
-      </block>
-    </statement>
-    <statement name="JOBS">
-      <block type="gha_job">
+            <next>
+              <block type="gha_job">
         <field name="JOB_NAME">test</field>
         <field name="RUNS_ON">ubuntu-latest</field>
         <field name="NEEDS"></field>
-        <statement name="STRATEGY">
+        <value name="STRATEGY">
           <block type="gha_strategy_matrix">
             <field name="MATRIX_KEY">python-version</field>
             <field name="MATRIX_VALUES">3.9, 3.10, 3.11, 3.12</field>
           </block>
-        </statement>
+        </value>
         <statement name="STEPS">
           <block type="gha_step_uses">
             <field name="STEP_NAME">Checkout</field>
@@ -179,12 +139,12 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
               <block type="gha_step_uses">
                 <field name="STEP_NAME">Setup Python</field>
                 <field name="USES">actions/setup-python@v5</field>
-                <statement name="WITH">
+                <value name="WITH">
                   <block type="gha_with_params">
                     <field name="KEY">python-version</field>
                     <field name="VALUE">\${{ matrix.python-version }}</field>
                   </block>
-                </statement>
+                </value>
                 <next>
                   <block type="gha_step_run">
                     <field name="STEP_NAME">Install dependencies</field>
@@ -198,11 +158,13 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
                   </block>
                 </next>
               </block>
+            </statement>
+              </block>
             </next>
           </block>
-        </statement>
+        </next>
       </block>
-    </statement>
+    </next>
   </block>
 </xml>`,
   },
@@ -213,42 +175,28 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
     category: "Release",
     blocks: `<xml xmlns="https://developers.google.com/blockly/xml">
   <block type="gha_workflow_name" x="10" y="10">
-    <field name="WORKFLOW_NAME">Publish to NPM</field>
-    <statement name="TRIGGERS">
+    <field name="NAME">Publish to NPM</field>
+    <next>
       <block type="gha_trigger">
         <field name="TRIGGER_TYPE">release</field>
-        <statement name="CONFIG">
-          <block type="release_config">
+        <value name="CONFIG">
+          <block type="gha_release_config">
             <field name="TYPES">published</field>
           </block>
-        </statement>
-      </block>
-    </statement>
-    <statement name="JOBS">
-      <block type="gha_job">
-        <field name="JOB_NAME">publish</field>
-        <field name="RUNS_ON">ubuntu-latest</field>
-        <field name="NEEDS"></field>
-        <statement name="STEPS">
-          <block type="gha_step_uses">
-            <field name="STEP_NAME">Checkout</field>
-            <field name="USES">actions/checkout@v4</field>
+        </value>
+        <next>
+          <block type="gha_job">
+            <field name="JOB_NAME">publish</field>
+            <field name="RUNS_ON">ubuntu-latest</field>
+            <field name="NEEDS"></field>
+            <statement name="STEPS">
+              <block type="gha_step_uses">
+                <field name="STEP_NAME">Checkout</field>
+                <field name="USES">actions/checkout@v4</field>
             <next>
               <block type="gha_step_uses">
                 <field name="STEP_NAME">Setup Node</field>
                 <field name="USES">actions/setup-node@v4</field>
-                <statement name="WITH">
-                  <block type="gha_with_params">
-                    <field name="KEY">node-version</field>
-                    <field name="VALUE">20</field>
-                    <next>
-                      <block type="gha_with_params">
-                        <field name="KEY">registry-url</field>
-                        <field name="VALUE">https://registry.npmjs.org/</field>
-                      </block>
-                    </next>
-                  </block>
-                </statement>
                 <next>
                   <block type="gha_step_run">
                     <field name="STEP_NAME">Install</field>
@@ -260,13 +208,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
                         <next>
                           <block type="gha_step_run">
                             <field name="STEP_NAME">Publish</field>
-                            <field name="RUN">npm publish</field>
-                            <statement name="ENV">
-                              <block type="gha_env_vars">
-                                <field name="KEY">NODE_AUTH_TOKEN</field>
-                                <field name="VALUE">\${{ secrets.NPM_TOKEN }}</field>
-                              </block>
-                            </statement>
+                            <field name="RUN">NODE_AUTH_TOKEN=\${{ secrets.NPM_TOKEN }} npm publish</field>
                           </block>
                         </next>
                       </block>
@@ -277,8 +219,10 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
             </next>
           </block>
         </statement>
+          </block>
+        </next>
       </block>
-    </statement>
+    </next>
   </block>
 </xml>`,
   },
@@ -289,8 +233,8 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
     category: "Deployment",
     blocks: `<xml xmlns="https://developers.google.com/blockly/xml">
   <block type="gha_workflow_name" x="10" y="10">
-    <field name="WORKFLOW_NAME">Deploy to GitHub Pages</field>
-    <statement name="PERMISSIONS">
+    <field name="NAME">Deploy to GitHub Pages</field>
+    <value name="PERMISSIONS">
       <block type="gha_permissions">
         <field name="PERMISSION_TYPE">contents</field>
         <field name="PERMISSION_LEVEL">read</field>
@@ -307,23 +251,21 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
           </block>
         </next>
       </block>
-    </statement>
-    <statement name="TRIGGERS">
+    </value>
+    <next>
       <block type="gha_trigger">
         <field name="TRIGGER_TYPE">push</field>
-        <statement name="CONFIG">
-          <block type="push_pull_request_config">
+        <value name="CONFIG">
+          <block type="gha_push_config">
             <field name="BRANCHES">main</field>
           </block>
-        </statement>
-      </block>
-    </statement>
-    <statement name="JOBS">
-      <block type="gha_job">
-        <field name="JOB_NAME">build</field>
-        <field name="RUNS_ON">ubuntu-latest</field>
-        <field name="NEEDS"></field>
-        <statement name="STEPS">
+        </value>
+        <next>
+          <block type="gha_job">
+            <field name="JOB_NAME">build</field>
+            <field name="RUNS_ON">ubuntu-latest</field>
+            <field name="NEEDS"></field>
+            <statement name="STEPS">
           <block type="gha_step_uses">
             <field name="STEP_NAME">Checkout</field>
             <field name="USES">actions/checkout@v4</field>
@@ -339,9 +281,12 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
                       <block type="gha_step_uses">
                         <field name="STEP_NAME">Upload artifact</field>
                         <field name="USES">actions/upload-pages-artifact@v3</field>
-                        <statement name="WITH">
+                        <value name="WITH">
                           <block type="gha_with_params">
                             <field name="KEY">path</field>
+                            <field name="VALUE">./dist</field>
+                          </block>
+                        </value>
                             <field name="VALUE">./dist</field>
                           </block>
                         </statement>
@@ -353,22 +298,24 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
             </next>
           </block>
         </statement>
-        <next>
-          <block type="gha_job">
-            <field name="JOB_NAME">deploy</field>
-            <field name="RUNS_ON">ubuntu-latest</field>
-            <field name="NEEDS">build</field>
-            <statement name="STEPS">
-              <block type="gha_step_uses">
-                <field name="STEP_NAME">Deploy to GitHub Pages</field>
-                <field name="USES">actions/deploy-pages@v4</field>
-              </block>
-            </statement>
-          </block>
-        </next>
-      </block>
-    </statement>
-  </block>
+            </block>
+          <next>
+            <block type="gha_job">
+              <field name="JOB_NAME">deploy</field>
+              <field name="RUNS_ON">ubuntu-latest</field>
+              <field name="NEEDS">build</field>
+              <statement name="STEPS">
+                <block type="gha_step_uses">
+                  <field name="STEP_NAME">Deploy to GitHub Pages</field>
+                  <field name="USES">actions/deploy-pages@v4</field>
+                </block>
+              </statement>
+            </block>
+          </next>
+        </block>
+      </next>
+    </block>
+  </next>
 </xml>`,
   },
 ];

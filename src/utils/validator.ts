@@ -92,13 +92,13 @@ function validateWorkflowName(
   errors: ValidationError[],
   warnings: ValidationError[]
 ): void {
-  const name = block.getFieldValue("WORKFLOW_NAME");
+  const name = block.getFieldValue("NAME");
   if (!name || name.trim() === "") {
     errors.push({
       blockId: block.id,
       message: "Workflow name cannot be empty",
       severity: "error",
-      field: "WORKFLOW_NAME",
+      field: "NAME",
     });
   }
 

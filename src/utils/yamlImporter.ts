@@ -44,10 +44,7 @@ export function importYamlToWorkspace(
 
     // Create workflow name block
     const workflowBlock = workspace.newBlock("gha_workflow_name");
-    workflowBlock.setFieldValue(
-      workflow.name || "Imported Workflow",
-      "WORKFLOW_NAME"
-    );
+    workflowBlock.setFieldValue(workflow.name || "Imported Workflow", "NAME");
     workflowBlock.moveBy(20, 20);
     workflowBlock.initSvg();
 
