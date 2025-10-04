@@ -18,7 +18,7 @@ npm install
 npm run dev
 ```
 
-**📚 [Complete User Guide](docs/USER_GUIDE.md)** • **🚀 [Quick Start](docs/QUICKSTART.md)** • **💡 [Examples](docs/examples.md)**
+**📚 [Complete User Guide](markdown/USER_GUIDE.md)** • **🚀 [Quick Start](markdown/QUICKSTART.md)** • **💡 [Examples](markdown/examples.md)**
 
 ---
 
