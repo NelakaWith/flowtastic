@@ -292,6 +292,9 @@ Blockly.Blocks["gha_job"] = {
         ]),
         "RUNS_ON"
       );
+    this.appendDummyInput()
+      .appendField("Needs (comma-separated):")
+      .appendField(new Blockly.FieldTextInput(""), "NEEDS");
     this.appendValueInput("PERMISSIONS")
       .setCheck(null)
       .appendField("Permissions");
@@ -299,7 +302,9 @@ Blockly.Blocks["gha_job"] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
-    this.setTooltip("Define a job with its runner, permissions, and steps");
+    this.setTooltip(
+      "Define a job with its runner, dependencies, permissions, and steps"
+    );
     this.setHelpUrl("");
   },
 };
@@ -448,14 +453,9 @@ Blockly.Blocks["gha_with_params"] = {
     this.appendDummyInput().appendField("With Parameters");
     this.appendDummyInput()
       .appendField("Key:")
-      .appendField(new Blockly.FieldTextInput("node-version"), "KEY1")
+      .appendField(new Blockly.FieldTextInput(""), "KEY")
       .appendField("Value:")
-      .appendField(new Blockly.FieldTextInput("18"), "VALUE1");
-    this.appendDummyInput()
-      .appendField("Key:")
-      .appendField(new Blockly.FieldTextInput("cache"), "KEY2")
-      .appendField("Value:")
-      .appendField(new Blockly.FieldTextInput("npm"), "VALUE2");
+      .appendField(new Blockly.FieldTextInput(""), "VALUE");
     this.setOutput(true, null);
     this.setColour(330);
     this.setTooltip("Parameters for action steps");

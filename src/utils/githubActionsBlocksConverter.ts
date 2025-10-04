@@ -8,6 +8,7 @@ export interface GitHubActionsWorkflowDirect {
     string,
     {
       "runs-on": string;
+      needs?: string[];
       permissions?: Record<string, string>;
       strategy?: {
         matrix: Record<string, string[]>;
@@ -215,12 +216,22 @@ const processGitHubActionsBlock = (
     case "gha_job": {
       const jobName = block.getFieldValue("JOB_NAME");
       const runsOn = block.getFieldValue("RUNS_ON");
+      const needsValue = block.getFieldValue("NEEDS");
 
       // Collect all job properties first
+      let needs: string[] | undefined;
       let permissions: Record<string, string> | undefined;
       let strategy: { matrix: Record<string, string[]> } | undefined;
       let env: Record<string, string> | undefined;
       const steps: Array<Record<string, unknown>> = [];
+
+      // Parse needs field
+      if (needsValue && needsValue.trim()) {
+        needs = needsValue
+          .split(",")
+          .map((n: string) => n.trim())
+          .filter((n: string) => n);
+      }
 
       // Process permissions input
       const permissionsBlock = block.getInputTargetBlock("PERMISSIONS");
@@ -256,6 +267,9 @@ const processGitHubActionsBlock = (
       };
 
       // Add optional properties in correct order
+      if (needs && needs.length > 0) {
+        job.needs = needs;
+      }
       if (permissions) {
         job.permissions = permissions;
       }
@@ -370,13 +384,12 @@ const processGitHubActionsBlock = (
     case "gha_with_params": {
       const withParams: Record<string, unknown> = {};
 
-      const key1 = block.getFieldValue("KEY1");
-      const value1 = block.getFieldValue("VALUE1");
-      const key2 = block.getFieldValue("KEY2");
-      const value2 = block.getFieldValue("VALUE2");
+      const key = block.getFieldValue("KEY");
+      const value = block.getFieldValue("VALUE");
 
-      if (key1.trim()) withParams[key1] = value1;
-      if (key2.trim()) withParams[key2] = value2;
+      if (key && key.trim()) {
+        withParams[key] = value;
+      }
 
       return {
         type: "with_params",
