@@ -3,7 +3,11 @@ import * as Blockly from "blockly";
 import { BlocklyEditor } from "./components/BlocklyEditor";
 import { CodePreview } from "./components/CodePreview";
 import { WorkflowControls } from "./components/WorkflowControls";
+import { TemplateSelector } from "./components/TemplateSelector";
+import { ValidationPanel } from "./components/ValidationPanel";
+import { useToast } from "./hooks/useToast";
 import { blocklyToWorkflow, type Workflow } from "./utils/blockToWorkflow";
+import type { WorkflowTemplate } from "./templates/templateTypes";
 import "./App.css";
 
 const STORAGE_KEY = "flowtastic_workflow";
@@ -15,6 +19,8 @@ function App() {
     version: "1.0.0",
     steps: [],
   });
+  const [showTemplates, setShowTemplates] = useState(false);
+  const { showToast } = useToast();
 
   const handleWorkspaceChange = useCallback(
     (workspace: Blockly.WorkspaceSvg) => {
@@ -28,9 +34,9 @@ function App() {
     if (workspaceRef.current) {
       const state = Blockly.serialization.workspaces.save(workspaceRef.current);
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      alert("Workflow saved successfully!");
+      showToast("Workflow saved successfully!", "success");
     }
-  }, []);
+  }, [showToast]);
 
   const handleLoad = useCallback(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
@@ -38,14 +44,14 @@ function App() {
       try {
         const state = JSON.parse(saved);
         Blockly.serialization.workspaces.load(state, workspaceRef.current);
-        alert("Workflow loaded successfully!");
+        showToast("Workflow loaded successfully!", "success");
       } catch (error) {
-        alert("Error loading workflow: " + error);
+        showToast("Error loading workflow: " + error, "error");
       }
     } else {
-      alert("No saved workflow found!");
+      showToast("No saved workflow found!", "warning");
     }
-  }, []);
+  }, [showToast]);
 
   const handleClear = useCallback(() => {
     if (
@@ -55,6 +61,51 @@ function App() {
       workspaceRef.current.clear();
     }
   }, []);
+
+  const handleImportYaml = useCallback(() => {
+    if (!workspaceRef.current) return;
+
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".yml,.yaml";
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      try {
+        const text = await file.text();
+        const { importYamlToWorkspace } = await import("./utils/yamlImporter");
+        const result = importYamlToWorkspace(text, workspaceRef.current!);
+
+        if (result.success) {
+          showToast("Workflow imported successfully!", "success");
+        } else {
+          showToast(`Import failed: ${result.error}`, "error");
+        }
+      } catch (error) {
+        showToast("Error reading file: " + error, "error");
+      }
+    };
+    input.click();
+  }, [showToast]);
+
+  const handleLoadTemplate = useCallback(
+    (template: WorkflowTemplate) => {
+      if (workspaceRef.current) {
+        try {
+          const dom = Blockly.utils.xml.textToDom(template.blocks);
+          workspaceRef.current.clear();
+          Blockly.Xml.domToWorkspace(dom, workspaceRef.current);
+          setShowTemplates(false);
+          showToast(`Template "${template.name}" loaded!`, "success");
+        } catch (error) {
+          console.error("Error loading template:", error);
+          showToast("Error loading template: " + error, "error");
+        }
+      }
+    },
+    [showToast]
+  );
 
   // Force app-wide dark mode (no toggle)
   useEffect(() => {
@@ -101,16 +152,29 @@ function App() {
         onSave={handleSave}
         onLoad={handleLoad}
         onClear={handleClear}
+        onOpenTemplates={() => setShowTemplates(true)}
+        onImportYaml={handleImportYaml}
       />
+
+      {/* Template Selector Modal */}
+      {showTemplates && (
+        <TemplateSelector
+          onSelectTemplate={handleLoadTemplate}
+          onClose={() => setShowTemplates(false)}
+        />
+      )}
 
       {/* Main Content - Split View */}
       <div className="flex-1 flex overflow-hidden">
         {/* Blockly Editor */}
-        <div className="flex-1 border-r border-gray-700">
-          <BlocklyEditor
-            onWorkspaceChange={handleWorkspaceChange}
-            workspaceRef={workspaceRef}
-          />
+        <div className="flex-1 border-r border-gray-700 flex flex-col">
+          <div className="flex-1">
+            <BlocklyEditor
+              onWorkspaceChange={handleWorkspaceChange}
+              workspaceRef={workspaceRef}
+            />
+          </div>
+          <ValidationPanel workspace={workspaceRef.current} />
         </div>
 
         {/* Code Preview */}

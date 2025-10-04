@@ -8,6 +8,7 @@ export interface GitHubActionsWorkflowDirect {
     string,
     {
       "runs-on": string;
+      needs?: string[];
       permissions?: Record<string, string>;
       strategy?: {
         matrix: Record<string, string[]>;
@@ -215,12 +216,22 @@ const processGitHubActionsBlock = (
     case "gha_job": {
       const jobName = block.getFieldValue("JOB_NAME");
       const runsOn = block.getFieldValue("RUNS_ON");
+      const needsValue = block.getFieldValue("NEEDS");
 
       // Collect all job properties first
+      let needs: string[] | undefined;
       let permissions: Record<string, string> | undefined;
       let strategy: { matrix: Record<string, string[]> } | undefined;
       let env: Record<string, string> | undefined;
       const steps: Array<Record<string, unknown>> = [];
+
+      // Parse needs field
+      if (needsValue && needsValue.trim()) {
+        needs = needsValue
+          .split(",")
+          .map((n: string) => n.trim())
+          .filter((n: string) => n);
+      }
 
       // Process permissions input
       const permissionsBlock = block.getInputTargetBlock("PERMISSIONS");
@@ -256,6 +267,9 @@ const processGitHubActionsBlock = (
       };
 
       // Add optional properties in correct order
+      if (needs && needs.length > 0) {
+        job.needs = needs;
+      }
       if (permissions) {
         job.permissions = permissions;
       }

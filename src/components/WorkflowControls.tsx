@@ -6,6 +6,8 @@ interface WorkflowControlsProps {
   onSave: () => void;
   onLoad: () => void;
   onClear: () => void;
+  onOpenTemplates: () => void;
+  onImportYaml: () => void;
 }
 
 export const WorkflowControls: React.FC<WorkflowControlsProps> = ({
@@ -13,6 +15,8 @@ export const WorkflowControls: React.FC<WorkflowControlsProps> = ({
   onSave,
   onLoad,
   onClear,
+  onOpenTemplates,
+  onImportYaml,
 }) => {
   const handleUndo = () => {
     if (workspace) {
@@ -48,6 +52,12 @@ export const WorkflowControls: React.FC<WorkflowControlsProps> = ({
   return (
     <div className="flex items-center gap-2 p-4 bg-gray-800 border-b border-gray-700">
       <div className="flex gap-2 border-r border-gray-700 pr-2">
+        <Button onClick={onOpenTemplates} variant="primary">
+          📋 Templates
+        </Button>
+        <Button onClick={onImportYaml} variant="success">
+          📥 Import YAML
+        </Button>
         <Button onClick={onSave} variant="primary">
           💾 Save
         </Button>

@@ -292,6 +292,9 @@ Blockly.Blocks["gha_job"] = {
         ]),
         "RUNS_ON"
       );
+    this.appendDummyInput()
+      .appendField("Needs (comma-separated):")
+      .appendField(new Blockly.FieldTextInput(""), "NEEDS");
     this.appendValueInput("PERMISSIONS")
       .setCheck(null)
       .appendField("Permissions");
@@ -299,7 +302,9 @@ Blockly.Blocks["gha_job"] = {
     this.setPreviousStatement(true, null);
     this.setNextStatement(true, null);
     this.setColour(230);
-    this.setTooltip("Define a job with its runner, permissions, and steps");
+    this.setTooltip(
+      "Define a job with its runner, dependencies, permissions, and steps"
+    );
     this.setHelpUrl("");
   },
 };
