@@ -194,42 +194,57 @@ export const CodePreview: React.FC<CodePreviewProps> = ({
         </div>
       </div>
 
-      <div className="flex-1 overflow-auto">
-        <pre className="p-4 text-sm font-mono">
-          <code>{getPreviewContent()}</code>
+      <div className="flex-1 overflow-auto bg-gray-950">
+        <pre className="p-6 text-sm font-mono leading-relaxed">
+          <code className="text-gray-300">{getPreviewContent()}</code>
         </pre>
       </div>
       {(format === "github-actions" || format === "github-blocks") && (
-        <div className="p-4 border-t border-gray-700 bg-gray-800">
+        <div className="p-5 border-t-2 border-blue-900/30 bg-gradient-to-r from-gray-800 to-gray-850">
           <div className="text-sm text-gray-300">
-            <p className="font-semibold mb-2">💡 GitHub Actions Workflow</p>
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xl">💡</span>
+              <p className="font-bold text-white">GitHub Actions Workflow</p>
+            </div>
             {format === "github-actions" && (
-              <p className="mb-2">
-                <span className="bg-blue-900 text-blue-200 px-2 py-1 rounded text-xs">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="bg-gradient-to-r from-blue-900 to-blue-800 text-blue-100 px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
                   CONVERTED
-                </span>{" "}
-                Generated from generic workflow blocks
-              </p>
+                </span>
+                <span className="text-gray-400">
+                  Generated from generic workflow blocks
+                </span>
+              </div>
             )}
             {format === "github-blocks" && (
-              <p className="mb-2">
-                <span className="bg-green-900 text-green-200 px-2 py-1 rounded text-xs">
+              <div className="mb-3 flex items-center gap-2">
+                <span className="bg-gradient-to-r from-green-900 to-green-800 text-green-100 px-3 py-1 rounded-full text-xs font-semibold shadow-lg">
                   NATIVE
-                </span>{" "}
-                Built with GitHub Actions blocks
-              </p>
+                </span>
+                <span className="text-gray-400">
+                  Built with GitHub Actions blocks
+                </span>
+              </div>
             )}
-            <p>
-              Save this as{" "}
-              <code className="bg-gray-700 px-1 rounded">
-                .github/workflows/{getFileName()}
-              </code>{" "}
-              in your repository.
-            </p>
-            <p className="mt-1">
-              Configure required secrets in your repository settings for actions
-              that need them.
-            </p>
+            <div className="space-y-2 bg-gray-900/50 p-4 rounded-lg border border-gray-700">
+              <div className="flex items-start gap-2">
+                <span className="text-blue-400 mt-0.5">📁</span>
+                <p>
+                  Save this as{" "}
+                  <code className="bg-gray-700 text-blue-300 px-2 py-1 rounded font-mono text-xs">
+                    .github/workflows/{getFileName()}
+                  </code>{" "}
+                  in your repository.
+                </p>
+              </div>
+              <div className="flex items-start gap-2">
+                <span className="text-yellow-400 mt-0.5">🔑</span>
+                <p>
+                  Configure required secrets in your repository settings for
+                  actions that need them.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       )}
