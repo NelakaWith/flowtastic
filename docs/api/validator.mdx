@@ -1,0 +1,28 @@
+---
+title: Workspace Validator
+---
+
+# Workspace Validator
+
+The `validateWorkspace(workspace)` function performs semantic and syntactic checks on the Blockly workspace and returns a `ValidationResult` with `errors` and `warnings`.
+
+- `ValidationError` — { blockId, message, severity, field? }
+- `ValidationResult` — { valid, errors[], warnings[] }
+
+## Typical usage
+
+```ts
+import { validateWorkspace } from "../../src/utils/validator";
+
+const result = validateWorkspace(workspace);
+if (!result.valid) {
+ This page intentionally avoids complex imports and special characters to ensure the MDX parser (acorn) can parse the file reliably.
+}
+```
+
+const result = validateWorkspace(workspace);
+if (!result.valid) {
+result.errors.forEach((e) => console.error(e.message));
+}
+
+The validator checks workflow name presence, job names and uniqueness, step requirements, trigger types and key/value parameter blocks.

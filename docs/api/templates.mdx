@@ -1,0 +1,17 @@
+---
+title: Workflow Templates
+---
+
+# Workflow Templates
+
+The project ships a small registry of sample templates (`WORKFLOW_TEMPLATES`) defined in `src/templates/templateTypes.ts`.
+
+Each `WorkflowTemplate` has:
+
+- `id` — unique identifier
+- `name` — display name
+- `description` — short description
+- `category` — CI/CD, Testing, Deployment, Release, Automation
+- `blocks` — Blockly XML string that can be imported into the workspace
+
+Import a template by reading `WORKFLOW_TEMPLATES` and passing the `blocks` XML to the workspace importer.

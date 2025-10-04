@@ -1,0 +1,15 @@
+---
+title: YAML Importer
+---
+
+# YAML Importer
+
+`importYamlToWorkspace(yamlText, workspace)` parses a GitHub Actions workflow YAML and attempts to populate a Blockly workspace with equivalent blocks.
+
+## Returns
+
+- `{ success: boolean; error?: string }` — success indicates whether import succeeded.
+
+## Notes
+
+- The importer supports a minimal subset of GitHub Actions keys (name, on, permissions, jobs, steps). It's intended to give a reasonable starting point when importing an existing workflow.

@@ -1,0 +1,26 @@
+---
+title: GitHub Actions Converter
+---
+
+# GitHub Actions Converter
+
+Converts the project's internal Workflow model into a GitHub Actions-compatible object suitable for YAML serialization.
+
+## Key types
+
+- GitHubActionsStep — a single step (name, uses, run, with, env, if, continue-on-error)
+- GitHubActionsWorkflow — top-level workflow (name, on, permissions, jobs)
+
+## Usage example
+
+```ts
+import { blocklyToWorkflow } from "../../src/utils/blockToWorkflow";
+import { workflowToGitHubActions } from "../../src/utils/githubActionsConverter";
+import yaml from "js-yaml";
+
+const workflow = blocklyToWorkflow(workspace);
+const gha = workflowToGitHubActions(workflow);
+const yamlText = yaml.dump(gha);
+```
+
+The converter attempts to add sensible defaults (e.g. checkout step) when appropriate.

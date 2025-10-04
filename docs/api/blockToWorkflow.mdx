@@ -1,0 +1,24 @@
+---
+title: Blockly → Workflow
+---
+
+# Blockly to Workflow
+
+This module converts a Blockly workspace into a simple `Workflow` object. The `Workflow` shape includes a `name`, `version`, optional `trigger` and a linear `steps` array.
+
+## Key exports
+
+- `Workflow` — top-level representation produced from the workspace
+- `WorkflowStep` — freed-form step type
+- `blocklyToWorkflow(workspace)` — converts a Blockly.WorkspaceSvg into `Workflow`
+
+## Example
+
+```ts
+import { blocklyToWorkflow } from "../../src/utils/blockToWorkflow";
+
+const workflow = blocklyToWorkflow(workspace);
+console.log(workflow.name, workflow.steps.length);
+```
+
+The converter is permissive by design and returns minimal shapes for blocks it doesn't fully understand; it's intended for preview and for feeding into the GitHub Actions converter.
