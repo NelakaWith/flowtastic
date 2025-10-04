@@ -1,12 +1,22 @@
 import * as Blockly from "blockly";
 
+/**
+ * Error or warning produced by the validation engine.
+ */
 export interface ValidationError {
+  /** Blockly block id related to the issue (empty for workspace-level) */
   blockId: string;
+  /** Human readable message */
   message: string;
+  /** Severity level */
   severity: "error" | "warning";
+  /** Optional field name on the block that has the problem */
   field?: string;
 }
 
+/**
+ * Result of validating a workspace.
+ */
 export interface ValidationResult {
   valid: boolean;
   errors: ValidationError[];
@@ -14,7 +24,12 @@ export interface ValidationResult {
 }
 
 /**
- * Validates a Blockly workspace for GitHub Actions workflows
+ * Validate an entire Blockly workspace and collect errors/warnings.
+ *
+ * This function walks all blocks in the workspace and delegates to
+ * specific validation helpers for each block type.
+ *
+ * @param workspace - The Blockly workspace to validate
  */
 export function validateWorkspace(
   workspace: Blockly.WorkspaceSvg
@@ -24,7 +39,7 @@ export function validateWorkspace(
 
   const allBlocks = workspace.getAllBlocks(false);
 
-  // Check for workflow name block
+  // Ensure a single workflow name block exists
   const workflowBlocks = allBlocks.filter(
     (b) => b.type === "gha_workflow_name"
   );
@@ -42,7 +57,7 @@ export function validateWorkspace(
     });
   }
 
-  // Validate each block
+  // Validate each block with specific validators
   for (const block of allBlocks) {
     validateBlock(block, errors, warnings, allBlocks);
   }
@@ -54,6 +69,9 @@ export function validateWorkspace(
   };
 }
 
+/**
+ * Dispatches validation to block-type specific validators.
+ */
 function validateBlock(
   block: Blockly.Block,
   errors: ValidationError[],
@@ -87,6 +105,10 @@ function validateBlock(
   }
 }
 
+/**
+ * Validate the workflow name block. Ensures a non-empty name and the
+ * presence of triggers and jobs where applicable.
+ */
 function validateWorkflowName(
   block: Blockly.Block,
   errors: ValidationError[],
@@ -102,7 +124,7 @@ function validateWorkflowName(
     });
   }
 
-  // Check for triggers
+  // Check for triggers connection
   const triggersInput = block.getInput("TRIGGERS");
   if (triggersInput && !triggersInput.connection?.targetBlock()) {
     warnings.push({
@@ -113,7 +135,7 @@ function validateWorkflowName(
     });
   }
 
-  // Check for jobs
+  // Ensure at least one job is connected
   const jobsInput = block.getInput("JOBS");
   if (jobsInput && !jobsInput.connection?.targetBlock()) {
     errors.push({
@@ -125,6 +147,9 @@ function validateWorkflowName(
   }
 }
 
+/**
+ * Validate a job block: name format, uniqueness, runner and dependencies.
+ */
 function validateJob(
   block: Blockly.Block,
   errors: ValidationError[],
@@ -214,6 +239,9 @@ function validateJob(
   }
 }
 
+/**
+ * Validate a 'uses' step: presence of uses and optional naming.
+ */
 function validateStepUses(
   block: Blockly.Block,
   errors: ValidationError[],
@@ -248,6 +276,9 @@ function validateStepUses(
   }
 }
 
+/**
+ * Validate a run step (single or multi-line) ensuring run command exists.
+ */
 function validateStepRun(
   block: Blockly.Block,
   errors: ValidationError[],
@@ -275,6 +306,9 @@ function validateStepRun(
   }
 }
 
+/**
+ * Simple trigger validation – ensures trigger type is selected.
+ */
 function validateTrigger(
   block: Blockly.Block,
   errors: ValidationError[]
@@ -291,6 +325,9 @@ function validateTrigger(
   }
 }
 
+/**
+ * Validate small key/value parameter blocks used in action "with" inputs.
+ */
 function validateWithParams(
   block: Blockly.Block,
   errors: ValidationError[],
@@ -318,6 +355,9 @@ function validateWithParams(
   }
 }
 
+/**
+ * Validate environment variable blocks (key/value pairs).
+ */
 function validateEnvVars(
   block: Blockly.Block,
   errors: ValidationError[],

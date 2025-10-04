@@ -1,5 +1,10 @@
 import type { Workflow, WorkflowStep } from "./blockToWorkflow";
 
+/**
+ * A single step in the generated GitHub Actions workflow structure.
+ * This mirrors common properties used by GitHub Actions YAML steps.
+ * @public
+ */
 export interface GitHubActionsStep {
   name: string;
   uses?: string;
@@ -10,6 +15,22 @@ export interface GitHubActionsStep {
   "continue-on-error"?: boolean;
 }
 
+export interface GitHubActionsStep {
+  name: string;
+  uses?: string;
+  run?: string;
+  with?: Record<string, unknown>;
+  env?: Record<string, string>;
+  if?: string;
+  "continue-on-error"?: boolean;
+}
+
+/**
+ * Top-level shape for a generated GitHub Actions workflow.
+ * The converter produces objects compatible with js-yaml serialization
+ * to create a .github/workflows/*.yml file.
+ * @public
+ */
 export interface GitHubActionsWorkflow {
   name: string;
   permissions?: Record<string, string>;
@@ -23,6 +44,13 @@ export interface GitHubActionsWorkflow {
   };
 }
 
+/**
+ * Convert a generic WorkflowStep representing the trigger into the
+ * GitHub Actions `on:` object. This is intentionally permissive and
+ * supplies sensible defaults when the trigger is missing.
+ * @param trigger - Optional workflow trigger produced by the workspace
+ * @returns object suitable for the `on` key in a GitHub Actions workflow
+ */
 const convertTriggerToOn = (
   trigger?: WorkflowStep
 ): Record<string, unknown> => {
@@ -60,6 +88,13 @@ const convertTriggerToOn = (
   }
 };
 
+/**
+ * Map a generic workflow action step (from blockly `WorkflowStep`) to
+ * a GitHub Actions step object. This function covers several
+ * high-level action types (checkout, setup-node, deploy helpers, etc.).
+ * @param step - WorkflowStep from the generic converter
+ * @param index - index used to create a fallback name when missing
+ */
 const convertActionToStep = (
   step: WorkflowStep,
   index: number
@@ -140,6 +175,15 @@ const convertActionToStep = (
   }
 };
 
+/**
+ * Convert a generic WorkflowStep (which may represent control flow,
+ * http requests, notifications, or action/run steps) into one or more
+ * GitHub Actions steps. Some complex blocks expand into multiple
+ * sequential steps (e.g. condition blocks).
+ * @param step - WorkflowStep to convert
+ * @param index - index of the step in the overall workflow
+ * @returns a GitHubActionsStep or an array of steps
+ */
 const convertStepToGitHubActions = (
   step: WorkflowStep,
   index: number
@@ -255,6 +299,21 @@ const convertStepToGitHubActions = (
   }
 };
 
+/**
+ * Convert the generic Workflow (produced by `blocklyToWorkflow`) into a
+ * GitHub Actions workflow object.
+ *
+ * The returned object is suitable for serialization to YAML via
+ * `js-yaml` and follows the minimal structure required by GitHub.
+ *
+ * @example
+ * const gha = workflowToGitHubActions(workflow);
+ * const yaml = yaml.dump(gha);
+ *
+ * @param workflow - Workflow object from the workspace converter
+ * @returns a GitHubActionsWorkflow shaped object
+ * @public
+ */
 export const workflowToGitHubActions = (
   workflow: Workflow
 ): GitHubActionsWorkflow => {

@@ -1,3 +1,9 @@
+/**
+ * A pre-defined workflow template. The `blocks` property contains a
+ * Blockly XML string which can be imported into the workspace.
+ *
+ * @public
+ */
 export interface WorkflowTemplate {
   id: string;
   name: string;
@@ -6,6 +12,13 @@ export interface WorkflowTemplate {
   blocks: string; // XML representation of Blockly workspace
 }
 
+/**
+ * A small registry of sample workflow templates. These appear in the
+ * UI to help users get started and are imported directly into the
+ * Blockly workspace via the XML contained in `blocks`.
+ *
+ * @public
+ */
 export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
   {
     id: "nodejs-ci",

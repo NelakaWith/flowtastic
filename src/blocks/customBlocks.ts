@@ -1,5 +1,12 @@
 import * as Blockly from "blockly";
 
+/**
+ * Custom workflow building blocks used by the generic workflow editor.
+ * These blocks are higher-level primitives (trigger, action, condition)
+ * and are intentionally framework-agnostic. They are registered on
+ * import by populating `Blockly.Blocks`.
+ */
+
 // Trigger Block
 Blockly.Blocks["workflow_trigger"] = {
   init: function () {
@@ -316,6 +323,13 @@ Blockly.Blocks["workflow_notification"] = {
   },
 };
 
+/**
+ * Application-level initializer for custom blocks. Like the GitHub
+ * Actions blocks, registration happens at import time, but the app
+ * calls this function during startup to make initialization explicit.
+ *
+ * @public
+ */
 export const initializeCustomBlocks = () => {
   // Blocks are registered when this module is imported
   console.log("Custom workflow blocks initialized");

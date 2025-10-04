@@ -1,6 +1,11 @@
 import * as Blockly from "blockly";
 import yaml from "js-yaml";
 
+/**
+ * Minimal shape of a parsed GitHub Action workflow used by the YAML importer.
+ * This is intentionally loose — the importer only reads a subset of keys
+ * required to map into Blockly blocks (name, on, permissions, jobs).
+ */
 interface GitHubAction {
   name?: string;
   on?: Record<string, unknown> | string[];
@@ -8,6 +13,9 @@ interface GitHubAction {
   jobs?: Record<string, Job>;
 }
 
+/**
+ * Minimal representation of a job used by the YAML importer.
+ */
 interface Job {
   "runs-on": string;
   needs?: string | string[];
@@ -19,6 +27,9 @@ interface Job {
   steps?: Step[];
 }
 
+/**
+ * Minimal representation of a step used by the YAML importer.
+ */
 interface Step {
   name?: string;
   uses?: string;
@@ -30,7 +41,15 @@ interface Step {
 }
 
 /**
- * Import YAML workflow and create Blockly blocks
+ * Import YAML workflow content into a Blockly workspace.
+ *
+ * This function parses the provided YAML and attempts to create an
+ * equivalent set of Blockly blocks that represent the same workflow.
+ *
+ * @param yamlContent - Raw YAML string containing a GitHub Actions workflow
+ * @param workspace - Blockly.WorkspaceSvg to populate with blocks
+ * @returns an object with a 'success' flag and optional 'error' message
+ * @public
  */
 export function importYamlToWorkspace(
   yamlContent: string,

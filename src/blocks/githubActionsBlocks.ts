@@ -1,5 +1,14 @@
 import * as Blockly from "blockly";
 
+/**
+ * GitHub Actions Blockly block definitions.
+ *
+ * This module registers a set of `gha_*` blocks modelling the common
+ * GitHub Actions workflow concepts (workflow name, triggers, jobs,
+ * steps, permissions, etc.). Blocks are registered on import via
+ * the global `Blockly.Blocks` registry.
+ */
+
 // Workflow Name Block
 Blockly.Blocks["gha_workflow_name"] = {
   init: function () {
@@ -540,6 +549,14 @@ Blockly.Blocks["gha_strategy_matrix"] = {
   },
 };
 
+/**
+ * Optional initializer called by the application to indicate the
+ * GitHub Actions blocks are available. The registration happens on
+ * import, so this function is a no-op used for clarity in the app
+ * initialization sequence.
+ *
+ * @public
+ */
 export const initializeGitHubActionsBlocks = () => {
   console.log("GitHub Actions blocks initialized");
 };
