@@ -158,7 +158,9 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
                   </block>
                 </next>
               </block>
-            </statement>
+            </next>
+          </block>
+        </statement>
               </block>
             </next>
           </block>
@@ -287,7 +289,7 @@ export const WORKFLOW_TEMPLATES: WorkflowTemplate[] = [
                             <field name="VALUE">./dist</field>
                           </block>
                         </value>
-                            <field name="VALUE">./dist</field>
+                      </block>
                           </block>
                         </statement>
                       </block>
