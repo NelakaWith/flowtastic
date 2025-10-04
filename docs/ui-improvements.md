@@ -22,6 +22,12 @@ Comprehensive UI/UX enhancements to make Flowtastic more polished, professional,
 ```css
 .animate-fade-in      /* 0.2s fade */
 /* 0.2s fade */
+/* 0.2s fade */
+/* 0.2s fade */
+/* 0.2s fade */
+/* 0.2s fade */
+/* 0.2s fade */
+/* 0.2s fade */
 .animate-scale-in     /* 0.2s scale + fade */
 .animate-pulse-slow   /* 2s infinite pulse */
 .animate-slide-in-right; /* 0.3s slide from right */
@@ -188,11 +194,31 @@ Dark-themed scrollbars for better visual consistency:
    variant = "secondary"; // Gray-themed
    ```
 
-5. **Enhanced Effects**
-   - Shadow effects on primary, danger, success
-   - Active scale animation: `active:scale-95`
-   - Hover state enhancements
-   - Disabled state with opacity
+5. **Aurora Gradient Styling**
+
+- Rich gradient backgrounds on solid variants (`primary`, `danger`, `success`, `secondary`)
+- Aurora shimmer overlay on hover/focus using pseudo-elements
+- Variant-specific focus rings for clearer accessibility cues
+
+6. **Layout Controls**
+
+```tsx
+<Button icon={<Icon />} iconPosition="right" fullWidth>
+  Continue
+</Button>
+```
+
+- Optional `iconPosition` (`left` | `right`)
+- `fullWidth` prop for responsive layouts
+- Spinner inherits icon alignment when `loading`
+
+7. **Enhanced Effects**
+
+- Shadow/glow tuned per variant
+- Active scale animation: `active:scale-95`
+- Hover state enhancements + shimmer sweep
+- Disabled state with elevated contrast and opacity guard
+- Loading state powered by shared `LoadingSpinner` component (size `sm`)
 
 ### **Footer**
 

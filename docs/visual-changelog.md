@@ -263,8 +263,12 @@ Indicator       Badges       Info Box    Badges
 #### After:
 
 ```
-[◐ Processing...]  (Loading)
-    Spinning icon
+
+╔════════════════════╗
+║ ◐ Processing...   ║  (Loading)
+╚════════════════════╝
+    Gradient glow
+    Aurora shimmer
     Disabled state
 
 [💾 Save]  (With Icon)
@@ -273,8 +277,12 @@ Indicator       Badges       Info Box    Badges
 [lg: Save Workflow]  (Large)
     Bigger padding
 
+[Full Width → Continue ▸]
+    Edge-to-edge layout
+
 Hover Effects:
   • Shadow glow
+  • Shimmer sweep
   • Scale transform
   • Color shift
 ```
@@ -283,10 +291,13 @@ Hover Effects:
 
 - ⏳ Loading state with spinner
 - 🎯 Icon support
-- 📏 Size variants (sm, md, lg)
+- 🔁 Icon alignment controls (left/right)
+- 📏 Size variants (sm, md, lg) + full width
+- 🌈 Gradient skins with aurora shimmer
 - ✨ Enhanced hover effects
 - 💫 Active scale animation
-- 🎨 Shadow effects
+- 🛡️ Color-coded focus rings
+- 🎨 Variant-specific shadows
 
 ---
 
