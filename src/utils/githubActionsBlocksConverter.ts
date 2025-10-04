@@ -384,13 +384,12 @@ const processGitHubActionsBlock = (
     case "gha_with_params": {
       const withParams: Record<string, unknown> = {};
 
-      const key1 = block.getFieldValue("KEY1");
-      const value1 = block.getFieldValue("VALUE1");
-      const key2 = block.getFieldValue("KEY2");
-      const value2 = block.getFieldValue("VALUE2");
+      const key = block.getFieldValue("KEY");
+      const value = block.getFieldValue("VALUE");
 
-      if (key1.trim()) withParams[key1] = value1;
-      if (key2.trim()) withParams[key2] = value2;
+      if (key && key.trim()) {
+        withParams[key] = value;
+      }
 
       return {
         type: "with_params",
